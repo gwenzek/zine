@@ -200,19 +200,19 @@ const page_finder = struct {
         switch (search) {
             .ref => |ref| {
                 // `foo/bar` can be one of:
-                //  - foo/bar.smd
-                //  - foo/bar/index.smd
+                //  - foo/bar.md
+                //  - foo/bar/index.md
 
                 var md_path = try std.fs.path.join(gpa, &.{
                     ref.site._meta.content_dir_path,
                     ref.path,
-                    "index.smd",
+                    "index.md",
                 });
 
                 std.fs.cwd().access(md_path, .{}) catch {
-                    const end = md_path.len - "/index.smd".len + ".smd".len;
+                    const end = md_path.len - "/index.md".len + ".md".len;
                     md_path = md_path[0..end];
-                    md_path[md_path.len - 4 .. end][0..4].* = ".smd".*;
+                    md_path[md_path.len - 3 .. end][0..3].* = ".md".*;
 
                     std.fs.cwd().access(md_path, .{}) catch {
                         return context.Value.errFmt(gpa, "unable to find '{s}'", .{
@@ -313,7 +313,7 @@ const page_finder = struct {
             },
             .subpages => |page| {
                 const path = page._meta.md_rel_path;
-                if (std.mem.endsWith(u8, path, "index.smd")) {
+                if (std.mem.endsWith(u8, path, "index.md")) {
                     const prefix = switch (page._meta.site._meta.kind) {
                         .simple => "",
                         .multi => |m| m.code,
@@ -321,7 +321,7 @@ const page_finder = struct {
                     const index_path = try std.fs.path.join(gpa, &.{
                         page_index_dir_path,
                         prefix,
-                        path[0 .. path.len - "index.smd".len],
+                        path[0 .. path.len - "index.md".len],
                         "s",
                     });
 
@@ -617,13 +617,13 @@ fn loadPage(
     var is_section = false;
     var md_asset_dir_path: []const u8 = undefined;
     var md_asset_dir_rel_path: []const u8 = undefined;
-    if (std.mem.endsWith(u8, md_path, "index.smd")) {
+    if (std.mem.endsWith(u8, md_path, "index.md")) {
         is_section = true;
-        md_asset_dir_path = md_path[0 .. md_path.len - "index.smd".len];
-        md_asset_dir_rel_path = md_rel_path[0 .. md_rel_path.len - "index.smd".len];
+        md_asset_dir_path = md_path[0 .. md_path.len - "index.md".len];
+        md_asset_dir_rel_path = md_rel_path[0 .. md_rel_path.len - "index.md".len];
     } else {
-        md_asset_dir_path = md_path[0 .. md_path.len - ".smd".len];
-        md_asset_dir_rel_path = md_rel_path[0 .. md_rel_path.len - ".smd".len];
+        md_asset_dir_path = md_path[0 .. md_path.len - ".md".len];
+        md_asset_dir_rel_path = md_rel_path[0 .. md_rel_path.len - ".md".len];
     }
 
     const in_file = std.fs.cwd().openFile(md_path, .{}) catch |err| {
@@ -647,7 +647,7 @@ fn loadPage(
     const md_src = try r.readAllAlloc(gpa, 1024 * 1024 * 10);
 
     const psp: ?[]const u8 = parent_section_path orelse blk: {
-        if (std.mem.eql(u8, md_rel_path, "index.smd")) break :blk null;
+        if (std.mem.eql(u8, md_rel_path, "index.md")) break :blk null;
 
         const path_to_hash = std.fs.path.dirname(md_rel_path) orelse "";
         var hash = std.hash.Wyhash.init(1990);
@@ -657,7 +657,7 @@ fn loadPage(
                 hash.update(ml.code);
             },
         }
-        if (std.mem.endsWith(u8, md_rel_path, "/index.smd")) {
+        if (std.mem.endsWith(u8, md_rel_path, "/index.md")) {
             hash.update(std.fs.path.dirname(path_to_hash) orelse "");
         } else {
             hash.update(path_to_hash);
@@ -740,7 +740,7 @@ fn loadPage(
     page._meta = .{
         // TODO: unicode this
         .word_count = @intCast(md_src.len / 6),
-        .is_section = std.mem.endsWith(u8, md_path, "/index.smd"),
+        .is_section = std.mem.endsWith(u8, md_path, "/index.md"),
         .md_path = md_path,
         .md_rel_path = md_rel_path,
         .md_asset_dir_path = md_asset_dir_path,
@@ -982,7 +982,7 @@ fn loadPage(
                                     "the homepage has no siblings",
                                 );
 
-                                const end = md_rel_path.len - "index.smd".len;
+                                const end = md_rel_path.len - "index.md".len;
                                 break :sub try std.fs.path.join(gpa, &.{
                                     md_rel_path[0..end],
                                     p.ref,

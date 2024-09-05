@@ -183,8 +183,8 @@ pub const Builtins = struct {
             \\
             \\For example, the value 'foo/bar' will be automatically
             \\matched by Zine with either:
-            \\ - content/foo/bar.smd
-            \\ - content/foo/bar/index.smd
+            \\ - content/foo/bar.md
+            \\ - content/foo/bar/index.md
         ;
         pub const examples =
             \\<a href="$site.page('downloads').link()">Downloads</a>
