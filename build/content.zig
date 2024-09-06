@@ -38,8 +38,9 @@ fn scan(
     zine_dep: *std.Build.Dependency,
     website: AddWebsiteOptions,
 ) void {
+    std.log.info("project cache_root: {?s}", .{project.cache_root.path});
     const index_dir_path = project.pathJoin(&.{
-        project.cache_root.path orelse ".",
+        project.cache_root.path.?,
         "zine",
     });
     const index_dir = project.cache_root.handle.makeOpenPath(
@@ -1046,6 +1047,7 @@ const Section = struct {
                     } else {
                         hash.update(p.content_sub_path);
                     }
+                    std.log.info("Creating ps_index entry {}/{x} for {s}({s})", .{ ps_index_dir, hash.final(), p.md_name, p.content_sub_path });
                     const f = ps_index_dir.createFile(
                         project.fmt("{x}", .{hash.final()}),
                         .{},
