@@ -678,7 +678,7 @@ fn loadPage(
             gpa,
             ps_index_file_path,
             std.math.maxInt(u32),
-        ) catch @panic("i/o: ps_file_path");
+        ) catch @panic("i/o: ps_index_file_path");
 
         log.debug("dep: '{s}'", .{ps_index_file_path});
         dep_writer.print("{s} ", .{ps_index_file_path}) catch {

@@ -10,7 +10,7 @@ const context = zine.context;
 
 const log = std.log.scoped(.layout);
 pub const std_options: std.Options = .{
-    .log_level = .err,
+    .log_level = .debug,
     .log_scope_levels = options.log_scope_levels,
 };
 
