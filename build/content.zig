@@ -505,7 +505,7 @@ pub fn scanVariant(
         while (it.next() catch unreachable) |entry| {
             switch (entry.kind) {
                 else => continue,
-                .file => if (std.mem.endsWith(u8, entry.name, ".md")) {
+                .sym_link, .file => if (std.mem.endsWith(u8, entry.name, ".md")) {
                     if (std.mem.eql(u8, entry.name, "index.md")) continue;
                     const file = dir_entry.dir.openFile(entry.name, .{}) catch {
                         std.debug.print(
