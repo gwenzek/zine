@@ -10,13 +10,13 @@ const context = zine.context;
 
 const log = std.log.scoped(.layout);
 pub const std_options: std.Options = .{
-    .log_level = .debug,
+    .log_level = .info,
     .log_scope_levels = options.log_scope_levels,
 };
 
 pub fn main() !void {
-    defer log.debug("laoyut ended", .{});
-    errdefer |err| log.debug("layout ended with a failure: {}", .{err});
+    defer log.info("laoyut ended", .{});
+    errdefer |err| log.info("layout ended with a failure: {}", .{err});
 
     var arena_impl = std.heap.ArenaAllocator.init(std.heap.c_allocator);
     defer arena_impl.deinit();
@@ -57,7 +57,7 @@ pub fn main() !void {
     _ = locale_name;
     const locales_path = args[22];
 
-    for (args, 0..) |a, idx| log.debug("args[{}]: {s}", .{ idx, a });
+    for (args, 0..) |a, idx| log.info("args[{}]: {s}", .{ idx, a });
 
     const build_root = std.fs.cwd().openDir(build_root_path, .{}) catch |err| {
         fatal("error while opening the build root dir:\n{s}\n{s}\n", .{
@@ -234,7 +234,7 @@ pub fn main() !void {
                 template_name,
             });
 
-            log.debug("loading template = '{s}'", .{template_path});
+            log.info("loading template = '{s}'", .{template_path});
             const template_html = readFile(build_root, template_path, arena) catch |ioerr| {
                 super_vm.reportResourceFetchError(@errorName(ioerr));
                 std.debug.print(

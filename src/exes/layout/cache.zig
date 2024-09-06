@@ -236,7 +236,7 @@ const page_finder = struct {
                     },
                 };
 
-                log.debug("found page = {*}", .{val});
+                log.info("found page = {*}", .{val});
 
                 return .{ .page = val };
             },
@@ -264,7 +264,7 @@ const page_finder = struct {
                     index_in_section,
                 });
 
-                log.debug("dep: '{s}'", .{index_path});
+                log.info("dep: '{s}'", .{index_path});
 
                 dep_writer.print("{s} ", .{index_path}) catch {
                     std.debug.panic(
@@ -325,7 +325,7 @@ const page_finder = struct {
                         "s",
                     });
 
-                    log.debug("dep: '{s}'", .{index_path});
+                    log.info("dep: '{s}'", .{index_path});
 
                     dep_writer.print("{s} ", .{index_path}) catch {
                         std.debug.panic(
@@ -420,7 +420,7 @@ const asset_finder = struct {
                     );
                 };
 
-                log.debug("dep: '{s}'", .{full_path});
+                log.info("dep: '{s}'", .{full_path});
                 dep_writer.print("{s} ", .{full_path}) catch {
                     std.debug.panic(
                         "error while writing to dep file file: '{s}'",
@@ -448,7 +448,7 @@ const asset_finder = struct {
             },
         };
 
-        log.debug("finder opening '{s}'", .{base_path});
+        log.info("finder opening '{s}'", .{base_path});
         const dir = std.fs.cwd().openDir(base_path, .{}) catch {
             return context.Value.errFmt(gpa, "unable to open asset directory '{s}'", .{
                 base_path,
@@ -467,7 +467,7 @@ const asset_finder = struct {
             ref,
         });
 
-        log.debug("dep: '{s}'", .{full_path});
+        log.info("dep: '{s}'", .{full_path});
         dep_writer.print("{s} ", .{full_path}) catch {
             std.debug.panic(
                 "error while writing to dep file file: '{s}'",
@@ -524,7 +524,7 @@ const asset_collector = struct {
             install_rel_path,
         });
 
-        log.debug("collect asset: '{s}' -> '{s}'", .{ path, install_path });
+        log.info("collect asset: '{s}' -> '{s}'", .{ path, install_path });
 
         asset_collector.asset_list_writer.print("{s}\n{s}\n\n", .{
             path,
@@ -594,7 +594,7 @@ fn loadPage(
     index_in_section: ?usize,
     is_root_page: bool,
 ) !*context.Page {
-    log.debug("load page '{s}' '{s}'", .{
+    log.info("load page '{s}' '{s}'", .{
         site._meta.content_dir_path,
         md_rel_path,
     });
@@ -605,7 +605,7 @@ fn loadPage(
         md_rel_path,
     });
 
-    defer log.debug(
+    defer log.info(
         "Rendering '{s}' took {}ms ({}ns)\n",
         .{
             md_path,
@@ -669,7 +669,7 @@ fn loadPage(
             try std.fmt.allocPrint(gpa, "{x}", .{hash.final()}),
         });
 
-        log.debug("ps_index_file_path:'{s}' '{s}' '{s}'", .{
+        log.info("ps_index_file_path:'{s}' '{s}' '{s}'", .{
             index_dir_path,
             "ps",
             try std.fmt.allocPrint(gpa, "{x}", .{hash.final()}),
@@ -680,7 +680,7 @@ fn loadPage(
             std.math.maxInt(u32),
         ) catch @panic("i/o: ps_index_file_path");
 
-        log.debug("dep: '{s}'", .{ps_index_file_path});
+        log.info("dep: '{s}'", .{ps_index_file_path});
         dep_writer.print("{s} ", .{ps_index_file_path}) catch {
             std.debug.panic(
                 "error while writing to dep file file: '{s}'",
@@ -709,7 +709,7 @@ fn loadPage(
             std.math.maxInt(u32),
         ) catch @panic("i/o: ps_file_path");
 
-        log.debug("dep: '{s}'", .{ps_file_path});
+        log.info("dep: '{s}'", .{ps_file_path});
         dep_writer.print("{s} ", .{ps_file_path}) catch {
             std.debug.panic(
                 "error while writing to dep file file: '{s}'",
@@ -905,7 +905,7 @@ fn loadPage(
                     std.math.maxInt(u32),
                 ) catch @panic("i/o: asset path");
 
-                log.debug("dep: '{s}'", .{value.asset._meta.path});
+                log.info("dep: '{s}'", .{value.asset._meta.path});
 
                 dep_writer.print("{s} ", .{value.asset._meta.path}) catch {
                     std.debug.panic(
