@@ -40,7 +40,7 @@ pub fn initAll(
             title,
             host_url,
             url_path_prefix,
-            content_dir_path,
+            try std.fs.path.join(gpa, &.{ build_root_path, content_dir_path }),
             output_path_prefix,
         );
     }
@@ -678,7 +678,7 @@ fn loadPage(
             gpa,
             ps_index_file_path,
             std.math.maxInt(u32),
-        ) catch @panic("i/o");
+        ) catch @panic("i/o: ps_file_path");
 
         log.debug("dep: '{s}'", .{ps_index_file_path});
         dep_writer.print("{s} ", .{ps_index_file_path}) catch {
@@ -707,7 +707,7 @@ fn loadPage(
             gpa,
             ps_file_path,
             std.math.maxInt(u32),
-        ) catch @panic("i/o");
+        ) catch @panic("i/o: ps_file_path");
 
         log.debug("dep: '{s}'", .{ps_file_path});
         dep_writer.print("{s} ", .{ps_file_path}) catch {
@@ -903,7 +903,7 @@ fn loadPage(
                     gpa,
                     value.asset._meta.path,
                     std.math.maxInt(u32),
-                ) catch @panic("i/o");
+                ) catch @panic("i/o: asset path");
 
                 log.debug("dep: '{s}'", .{value.asset._meta.path});
 
